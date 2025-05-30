@@ -1,23 +1,40 @@
-graph TD
+我们要计算并简化表达式：
 
-A[程序启动] --> B[GPIO、UART、Timer 初始化]
-B --> C[启动Timer计数器和中断]
-C --> D[启用UART1和UART2中断]
-D --> E[允许MicroBlaze中断]
+$$
+\sin t + \sin\left(t + \frac{\pi}{3}\right)
+$$
 
-E --> F[主循环]
-F --> G[UART1_SEND_SWITCH：读取开关状态发送到UART1]
-F --> H[UART2_SEND_BUTTON：读取按钮状态发送到UART2]
-G --> I[等待100ms]
-H --> I
+使用**正弦和公式**：
 
-E -->|中断发生| J[My_ISR 总中断处理函数]
-J --> K[判断是否为Timer中断 → Seg_TimerCounterHandler]
-J --> L[判断是否为UART1中断 → UART_RECV_UART1]
-J --> M[判断是否为UART2中断 → UART_RECV_UART2]
+$$
+\sin A + \sin B = 2 \sin\left(\frac{A + B}{2}\right) \cos\left(\frac{A - B}{2}\right)
+$$
 
-K --> K1[更新段码显示内容和位置]
-L --> L1[读取接收到的按钮值 → 更新code[]数组]
-M --> M1[读取接收到的开关值 → 显示到LED]
+令：
 
-J --> N[清除当前中断标志]
+- \( A = t \)
+- \( B = t + \frac{\pi}{3} \)
+
+代入公式：
+
+$$
+\sin t + \sin\left(t + \frac{\pi}{3}\right) = 2 \sin\left(\frac{2t + \frac{\pi}{3}}{2}\right) \cos\left(\frac{-\frac{\pi}{3}}{2}\right)
+$$
+
+简化得：
+
+$$
+= 2 \sin\left(t + \frac{\pi}{6}\right) \cos\left(\frac{\pi}{6}\right)
+$$
+
+又因为：
+
+$$
+\cos\left(\frac{\pi}{6}\right) = \frac{\sqrt{3}}{2}
+$$
+
+所以最终结果为：
+
+$$
+\sin t + \sin\left(t + \frac{\pi}{3}\right) = \sqrt{3} \sin\left(t + \frac{\pi}{6}\right)
+$$
