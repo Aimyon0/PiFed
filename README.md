@@ -1,83 +1,29 @@
-设：
+```mermaid
+graph TD
+    Main[main()]
+    SegLoop[seg_display_loop()]
+    Init1[初始化 GPIO: 开关为输入（GPIO0）]
+    Init2[初始化 GPIO: LED 为输出（GPIO0）]
+    Init3[初始化 GPIO: 按键为输入（GPIO2）]
+    Loop[while(1) 无限循环]
 
-$$
-x(t) = \text{rect}\left(\frac{t}{2}\right), \quad h(t) = \text{rect}\left(\frac{t}{4}\right)
-$$
+    Main --> Init1
+    Main --> Init2
+    Main --> Init3
+    Init3 --> Loop
+    Loop --> SegLoop
 
-即：
+    subgraph seg_display_loop() 功能模块
+        A1[读取按钮状态]
+        A2[按键调速逻辑]
+        A3[读取拨码开关数据]
+        A4[转换段码（HEX）]
+        A5[刷新当前数码管位]
+        A6[熄灭当前位]
+        A7[current_digit 更新]
+        A8[LED走马灯计数+移动]
+        A9[更新LED输出]
+    end
 
-- \( x(t) = 1 \) for \( |t| < 1 \)，0 otherwise  
-- \( h(t) = 1 \) for \( |t| < 2 \)，0 otherwise
-
-它们的卷积为：
-
-$$
-y(t) = (x * h)(t) = \int_{-\infty}^{\infty} x(\tau) h(t - \tau) \, d\tau
-$$
-
----
-
-分段计算 \( y(t) \)：
-
-#### 1. \( t < -3 \)
-
-两函数无重叠，积分为 0：
-
-$$
-y(t) = 0
-$$
-
----
-
-#### 2. \( -3 \le t < -1 \)
-
-重叠区间：\( \tau \in [ -1, t + 2 ] \)
-
-$$
-y(t) = \int_{-1}^{t + 2} 1 \cdot 1 \, d\tau = t + 3
-$$
-
----
-
-#### 3. \( -1 \le t < 1 \)
-
-完全重叠，重叠区间：\( \tau \in [ -1, 1 ] \)
-
-$$
-y(t) = \int_{-1}^{1} 1 \cdot 1 \, d\tau = 2
-$$
-
----
-
-#### 4. \( 1 \le t < 3 \)
-
-重叠区间：\( \tau \in [ t - 2, 1 ] \)
-
-$$
-y(t) = \int_{t - 2}^{1} 1 \cdot 1 \, d\tau = 3 - t
-$$
-
----
-
-#### 5. \( t \ge 3 \)
-
-无重叠，积分为 0：
-
-$$
-y(t) = 0
-$$
-
----
-
-### 结果：
-
-\[
-y(t) =
-\begin{cases}
-0, & t < -3 \\
-t + 3, & -3 \le t < -1 \\
-2, & -1 \le t < 1 \\
-3 - t, & 1 \le t < 3 \\
-0, & t \ge 3
-\end{cases}
-\]
+    SegLoop --> A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9
+```
