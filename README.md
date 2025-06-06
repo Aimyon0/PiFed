@@ -2,21 +2,21 @@
 graph TD
 
     Main[main()]
-    Init1[初始化 GPIO: 开关为输入（GPIO0）]
-    Init2[初始化 GPIO: LED 为输出（GPIO0）]
-    Init3[初始化 GPIO: 按键为输入（GPIO2）]
-    Loop[while(1) 无限循环]
+    Init1[Init GPIO0: switches as input]
+    Init2[Init GPIO0: LEDs as output]
+    Init3[Init GPIO2: buttons as input]
+    Loop[while(1)]
     SegLoop[seg_display_loop()]
 
-    A1[读取按钮状态]
-    A2[按键调速逻辑]
-    A3[读取拨码开关数据]
-    A4[转换段码（HEX）]
-    A5[刷新当前数码管位]
-    A6[熄灭当前位]
-    A7[更新 current_digit]
-    A8[LED走马灯计数+移动]
-    A9[更新LED输出]
+    BtnRead[Read buttons]
+    BtnSpeed[Adjust speed]
+    SwRead[Read switches]
+    HexConv[Convert to HEX segcode]
+    ShowDigit[Display current digit]
+    ClearDigit[Clear digit to avoid ghosting]
+    NextDigit[Update current digit index]
+    LedCount[LED shift counter + update]
+    LedOut[Update LED output]
 
     Main --> Init1
     Main --> Init2
@@ -24,13 +24,13 @@ graph TD
     Init3 --> Loop
     Loop --> SegLoop
 
-    SegLoop --> A1
-    A1 --> A2
-    A2 --> A3
-    A3 --> A4
-    A4 --> A5
-    A5 --> A6
-    A6 --> A7
-    A7 --> A8
-    A8 --> A9
+    SegLoop --> BtnRead
+    BtnRead --> BtnSpeed
+    BtnSpeed --> SwRead
+    SwRead --> HexConv
+    HexConv --> ShowDigit
+    ShowDigit --> ClearDigit
+    ClearDigit --> NextDigit
+    NextDigit --> LedCount
+    LedCount --> LedOut
 ```
